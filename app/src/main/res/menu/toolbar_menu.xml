@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="@drawable/menu_bar"
+        android:icon="@drawable/circle_with_menu_bar"
         android:title="menu"
         app:showAsAction="always">
         <menu>
