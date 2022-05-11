@@ -12,14 +12,24 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.mt.greyfood.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_order"
+        android:name="com.mt.greyfood.ui.order.OrderFragment"
+        android:label="@string/title_order"
+        tools:layout="@layout/fragment_basket" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.mt.greyfood.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_basket"
+        android:name="com.mt.greyfood.ui.basket.BasketFragment"
+        android:label="@string/title_basket"
+        tools:layout="@layout/fragment_order" />
+    <fragment
+        android:id="@+id/navigation_campaigns"
+        android:name="com.mt.greyfood.ui.campaigns.CampaignsFragment"
+        android:label="@string/title_campaigns"
+        tools:layout="@layout/fragment_campaigns" />
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.mt.greyfood.ui.account.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" />
 </navigation>

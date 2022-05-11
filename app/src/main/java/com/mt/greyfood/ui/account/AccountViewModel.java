@@ -1,16 +1,15 @@
-package com.mt.greyfood.ui.notifications;
+package com.mt.greyfood.ui.account;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class NotificationsViewModel extends ViewModel {
-
+public class AccountViewModel extends ViewModel {
     private final MutableLiveData<String> mText;
 
-    public NotificationsViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+    public AccountViewModel() {
+        this.mText = new MutableLiveData<>();
+        mText.setValue("Hesabım");
     }
 
     public LiveData<String> getText() {
