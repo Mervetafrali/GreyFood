@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar = findViewById(R.id.tool_bar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         toolbar.showOverflowMenu();
