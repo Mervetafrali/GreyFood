@@ -7,11 +7,18 @@
     tools:context=".ui.home.HomeFragment">
     <!--Recycler View widget-->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
+        android:id="@+id/catalogrv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="horizontal"
         android:paddingTop="60dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/brandrv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="horizontal"
+        android:paddingTop="320dp" />
 
     <TextView
         android:id="@+id/text_home"

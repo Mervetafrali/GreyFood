@@ -1,6 +1,8 @@
 package com.mt.greyfood.ui.home;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +15,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mt.greyfood.R;
 import com.mt.greyfood.databinding.FragmentHomeBinding;
+import com.mt.greyfood.ui.adapter.BrandAdapter;
+import com.mt.greyfood.ui.adapter.CatalogAdapter;
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView rv;
+    RecyclerView catalogrv;
+    RecyclerView brandrv;
     LinearLayoutManager linearLayoutManager;
-    MyRvAdapter myRvAdapter;
+    CatalogAdapter catalogAdapter;
+    BrandAdapter brandAdapter;
     private FragmentHomeBinding binding;
     private FirebaseFirestore db;
 
@@ -37,7 +41,8 @@ public class HomeFragment extends Fragment {
         loadrecyclerViewData();
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        rv = view.findViewById(R.id.rv);
+        catalogrv = view.findViewById(R.id.catalogrv);
+        brandrv = view.findViewById(R.id.brandrv);
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
 
@@ -50,26 +55,61 @@ public class HomeFragment extends Fragment {
     private void loadrecyclerViewData() {
 
         DocumentReference reference = db.collection("greyfood").document("ZS31llcNdXiWipkKHh6v");
-        reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        ImagesList imagesList = document.toObject(ImagesList.class);
-                        myRvAdapter = new MyRvAdapter(imagesList.getKampanyalar());
-                        rv.setLayoutManager(linearLayoutManager);
-                        rv.setAdapter(myRvAdapter);
-                    } else {
-                        Log.d("TAG", "No such document");
-                    }
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    ImagesList imagesList = document.toObject(ImagesList.class);
+                    catalogAdapter = new CatalogAdapter(imagesList.getKampanyalar());
+                    catalogrv.setLayoutManager(linearLayoutManager);
+                    catalogrv.setAdapter(catalogAdapter);
+                    autoScroll();
+                    //TODO: hatalı
+                    brandAdapter = new BrandAdapter(imagesList.getMarkalar());
+                    brandrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                    brandrv.setAdapter(brandAdapter);
                 } else {
-                    Log.d("TAG", "get failed with ", task.getException());
+                    Log.d("TAG", "No such document");
                 }
+            } else {
+                Log.d("TAG", "get failed with ", task.getException());
             }
         });
     }
 
+    public void autoScroll() {
+        final int duration = 10;
+        final int pixelsToMove = 30;
+        final Handler mHandler = new Handler(Looper.getMainLooper());
+        final Runnable SCROLLING_RUNNABLE = new Runnable() {
+
+            @Override
+            public void run() {
+                catalogrv.smoothScrollBy(pixelsToMove, 0);
+                mHandler.postDelayed(this, duration);
+            }
+        };
+        catalogrv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                if (lastItem == linearLayoutManager.getItemCount() - 1) {
+                    mHandler.removeCallbacks(SCROLLING_RUNNABLE);
+                    Handler postHandler = new Handler();
+                    postHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.setAdapter(null);
+                            recyclerView.setAdapter(catalogAdapter);
+                            mHandler.postDelayed(SCROLLING_RUNNABLE, 2000);
+                        }
+                    }, 1000);
+                }
+            }
+        });
+        mHandler.postDelayed(SCROLLING_RUNNABLE, 1000);
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

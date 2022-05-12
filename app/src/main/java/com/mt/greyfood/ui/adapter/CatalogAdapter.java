@@ -1,4 +1,4 @@
-package com.mt.greyfood.ui.home;
+package com.mt.greyfood.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,38 +13,37 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder> {
-    List<String> data;
+public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.MyHolder> {
+    List<String> catalog;
 
-    public MyRvAdapter(List<String> data) {
-        this.data = data;
+    public CatalogAdapter(List<String> catalog) {
+        this.catalog = catalog;
     }
 
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_catalog, parent, false);
         return new MyHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        Picasso.get().load(data.get(position)).into(holder.imgView);
-
+        Picasso.get().load(catalog.get(position)).into(holder.catalog);
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return catalog.size();
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgView;
+        ImageView catalog;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            imgView = itemView.findViewById(R.id.viewImage);
+            catalog = itemView.findViewById(R.id.catalog);
         }
     }
 
