@@ -1,5 +1,6 @@
 package com.mt.greyfood;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mt.greyfood.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        BottomNavigationView navbar = findViewById(R.id.nav_view);
+        navbar.getOrCreateBadge(R.id.navigation_basket).setBackgroundColor(Color.GREEN);
+        navbar.getOrCreateBadge(R.id.navigation_basket).setNumber(1);
 
     }
 
