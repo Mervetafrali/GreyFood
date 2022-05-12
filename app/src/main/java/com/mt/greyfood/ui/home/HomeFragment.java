@@ -20,25 +20,31 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mt.greyfood.R;
+import com.mt.greyfood.ui.adapter.BlogAdapter;
 import com.mt.greyfood.ui.adapter.BrandAdapter;
 import com.mt.greyfood.ui.adapter.CatalogAdapter;
 import com.mt.greyfood.ui.adapter.Categori;
 import com.mt.greyfood.ui.adapter.CategoriesAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     RecyclerView catalogrv;
     RecyclerView brandrv;
     RecyclerView categoryrv;
+    RecyclerView blogrv;
+    RecyclerView snackrv;
     LinearLayoutManager linearLayoutManager;
     LinearLayout layout;
     CatalogAdapter catalogAdapter;
     BrandAdapter brandAdapter;
     CategoriesAdapter categoryAdapter;
+    BlogAdapter blogAdapter;
     View view;
     private FirebaseFirestore db;
+    public List<SnackModel> snackItemList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,11 @@ public class HomeFragment extends Fragment {
         catalogrv = view.findViewById(R.id.catalogrv);
         brandrv = view.findViewById(R.id.brandrv);
         categoryrv = view.findViewById(R.id.categoryrv);
+        blogrv = view.findViewById(R.id.blogrv);
+        snackrv = view.findViewById(R.id.recycler);
+        snackrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        snackrv.setAdapter(new com.mt.greyfood.adapters.SnackAdapter(initSnackData(), getContext()));
+
         return view;
     }
 
@@ -72,7 +83,7 @@ public class HomeFragment extends Fragment {
                     catalogAdapter = new CatalogAdapter(imagesList.getKampanyalar());
                     catalogrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                     catalogrv.setAdapter(catalogAdapter);
-                    autoScroll();
+                    //autoScroll();
                     brandAdapter = new BrandAdapter(imagesList.getMarkalar());
                     brandrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                     brandrv.setAdapter(brandAdapter);
@@ -88,6 +99,11 @@ public class HomeFragment extends Fragment {
                     categoryAdapter = new CategoriesAdapter(itemList);
                     categoryrv.setLayoutManager(new GridLayoutManager(getContext(), 3));
                     categoryrv.setAdapter(categoryAdapter);
+
+                    blogAdapter = new BlogAdapter(imagesList.getBlog());
+                    blogrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                    blogrv.setAdapter(blogAdapter);
+
                 } else {
                     Log.d("TAG", "No such document");
                 }
@@ -123,9 +139,9 @@ public class HomeFragment extends Fragment {
                         public void run() {
                             recyclerView.setAdapter(null);
                             recyclerView.setAdapter(catalogAdapter);
-                            mHandler.postDelayed(SCROLLING_RUNNABLE, 2000);
+                            mHandler.postDelayed(SCROLLING_RUNNABLE, 1000);
                         }
-                    }, 2000);
+                    }, 1000);
                 }
             }
         });
@@ -136,5 +152,15 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         view = null;
+    }
+
+    private List<SnackModel> initSnackData() {
+
+        snackItemList = new ArrayList<>();
+        snackItemList.add(new SnackModel("https://www.linkpicture.com/q/hanutaAtistirmalik.jpeg", "Atıştırmalık"));
+        snackItemList.add(new SnackModel("https://www.linkpicture.com/q/kahve.jpeg", "İçecekler"));
+        snackItemList.add(new SnackModel("https://www.linkpicture.com/q/hanutaAtistirmalik.jpeg", "Atıştırmalık"));
+
+        return snackItemList;
     }
 }

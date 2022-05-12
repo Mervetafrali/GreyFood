@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ImagesList {
-    @PropertyName("deneme")
+    @PropertyName("kategoriler")
     private List<Map<String, Categori>> kategoriler;
     @PropertyName("markalar")
     private List<String> markalar;
@@ -15,15 +15,26 @@ public class ImagesList {
     private List<String> coksatanlar;
     @PropertyName("kampanyalar")
     private List<String> kampanyalar;
+    @PropertyName("blog")
+    private List<String> blog;
 
-    public ImagesList(List<Map<String, Categori>> kategoriler, List<String> markalar, List<String> coksatanlar, List<String> kampanyalar) {
+    public ImagesList(List<Map<String, Categori>> kategoriler, List<String> markalar, List<String> coksatanlar, List<String> kampanyalar, List<String> blogs) {
         this.kategoriler = kategoriler;
         this.markalar = markalar;
         this.coksatanlar = coksatanlar;
         this.kampanyalar = kampanyalar;
+        this.blog = blogs;
     }
 
     public ImagesList() {
+    }
+
+    public List<String> getBlog() {
+        return blog;
+    }
+
+    public void setBlog(List<String> blog) {
+        this.blog = blog;
     }
 
     public List<Map<String, Categori>> getKategoriler() {
