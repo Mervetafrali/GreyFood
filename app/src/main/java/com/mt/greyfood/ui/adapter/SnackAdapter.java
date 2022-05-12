@@ -20,7 +20,7 @@ import java.util.List;
 public class SnackAdapter extends RecyclerView.Adapter<SnackAdapter.ViewHolder> {
 
     List<SnackModel> snackItems;
-    private Context context;
+    private final Context context;
 
     public SnackAdapter(List<SnackModel> itemList, Context context) {
         this.snackItems = itemList;
