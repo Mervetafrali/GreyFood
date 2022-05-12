@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mt.greyfood.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder> {
-    ArrayList<String> data;
+    List<String> data;
 
-    public MyRvAdapter(ArrayList<String> data) {
+    public MyRvAdapter(List<String> data) {
         this.data = data;
     }
 
@@ -29,11 +29,7 @@ class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        for (String item : data) {
-            Picasso.get().load(item).into(holder.imgView);
-
-        }
-
+        Picasso.get().load(data.get(position)).into(holder.imgView);
 
     }
 
