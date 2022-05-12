@@ -7,11 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,19 +20,31 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mt.greyfood.R;
-import com.mt.greyfood.databinding.FragmentHomeBinding;
 import com.mt.greyfood.ui.adapter.BrandAdapter;
 import com.mt.greyfood.ui.adapter.CatalogAdapter;
+import com.mt.greyfood.ui.adapter.Categori;
+import com.mt.greyfood.ui.adapter.CategoriesAdapter;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
     RecyclerView catalogrv;
     RecyclerView brandrv;
+    RecyclerView categoryrv;
     LinearLayoutManager linearLayoutManager;
+    LinearLayout layout;
     CatalogAdapter catalogAdapter;
     BrandAdapter brandAdapter;
-    private FragmentHomeBinding binding;
+    CategoriesAdapter categoryAdapter;
+    View view;
     private FirebaseFirestore db;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);//Make sure you have this line of code.
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,16 +52,12 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         db = FirebaseFirestore.getInstance();
         loadrecyclerViewData();
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        layout = view.findViewById(R.id.catalogLinear);
         catalogrv = view.findViewById(R.id.catalogrv);
         brandrv = view.findViewById(R.id.brandrv);
-        linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
+        categoryrv = view.findViewById(R.id.categoryrv);
         return view;
     }
 
@@ -61,13 +70,24 @@ public class HomeFragment extends Fragment {
                 if (document.exists()) {
                     ImagesList imagesList = document.toObject(ImagesList.class);
                     catalogAdapter = new CatalogAdapter(imagesList.getKampanyalar());
-                    catalogrv.setLayoutManager(linearLayoutManager);
+                    catalogrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                     catalogrv.setAdapter(catalogAdapter);
                     autoScroll();
-                    //TODO: hatalı
                     brandAdapter = new BrandAdapter(imagesList.getMarkalar());
                     brandrv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                     brandrv.setAdapter(brandAdapter);
+                    /*List<Map<String, Categori>> address = (List<Map<String, Categori>>) document.getData().get("deneme");
+                    Log.i("TAG",address.toString());*/
+                    ArrayList itemList = new ArrayList<>();
+                    itemList.add(new Categori("https://www.linkpicture.com/q/hanutaAtistirmalik.jpeg", "Atıştırmalık"));
+                    itemList.add(new Categori("https://www.linkpicture.com/q/icecek.jpeg", "İçecekler"));
+                    itemList.add(new Categori("https://www.linkpicture.com/q/gofret.jpeg", "Gofret"));
+                    itemList.add(new Categori("https://www.linkpicture.com/q/hanutaAtistirmalik.jpeg", "Dondurma"));
+                    itemList.add(new Categori("https://www.linkpicture.com/q/hanutaAtistirmalik.jpeg", "Çikolata"));
+                    itemList.add(new Categori("https://www.linkpicture.com/q/kahve.jpeg", "Kahve"));
+                    categoryAdapter = new CategoriesAdapter(itemList);
+                    categoryrv.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                    categoryrv.setAdapter(categoryAdapter);
                 } else {
                     Log.d("TAG", "No such document");
                 }
@@ -77,9 +97,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
+
     public void autoScroll() {
-        final int duration = 10;
-        final int pixelsToMove = 30;
+        final int duration = 150;
+        final int pixelsToMove = 150;
         final Handler mHandler = new Handler(Looper.getMainLooper());
         final Runnable SCROLLING_RUNNABLE = new Runnable() {
 
@@ -104,15 +125,16 @@ public class HomeFragment extends Fragment {
                             recyclerView.setAdapter(catalogAdapter);
                             mHandler.postDelayed(SCROLLING_RUNNABLE, 2000);
                         }
-                    }, 1000);
+                    }, 2000);
                 }
             }
         });
         mHandler.postDelayed(SCROLLING_RUNNABLE, 1000);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        view = null;
     }
 }
